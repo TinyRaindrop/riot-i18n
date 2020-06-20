@@ -35,7 +35,7 @@
     }
 
     I18n.prototype.localise = function(key, data) {
-        var substitute, locale;
+        var substitute, locale, default_locale;
 
         function flatten(n, f, d, k) {
             k = k || "", f = f || {}, d = d || 0
@@ -60,11 +60,13 @@
 
         if (!substitute) {
             locale = flatten(this._entities[this._language]);
-
+            default_locale = flatten(this._entities[this._default]);
+            
             if (!locale[key]) {
-                // When a translation is not
-                // provided, just return the original text.
-                substitute = key
+                // When a translation is not provided,
+                // return the text from the default language
+                // otherwise, return the original text (key)
+                substitute = default_locale[key] ? default_locale[key] : key;
             } else {
                 // return the language substitue for the original text
                 substitute = locale[key];
